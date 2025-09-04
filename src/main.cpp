@@ -2,6 +2,9 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 #include "Scanner.h"
 
 void printUsage() {
@@ -37,6 +40,12 @@ void parseArguments(int argc, char* argv[], std::string& baseFile,
 }
 
 int main(int argc, char* argv[]) {
+    // Устанавливаем кодировку для Windows
+    #ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+    #endif
+    
     if (argc < 4) {
         printUsage();
         return 1;
