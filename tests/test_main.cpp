@@ -2,7 +2,6 @@
 #include <dlfcn.h>
 #include "test_utils.hpp"
 
-// Объявления функций из DLL
 extern "C" {
     void* createScanner(const char*, const char*);
     void destroyScanner(void*);
@@ -17,13 +16,11 @@ protected:
         test_dir_ = test_utils::getTestResourcePath();
         test_utils::createTestDirectory(test_dir_);
         
-        // Создаем тестовые данные
         test_utils::createTestFile(test_dir_ + "/test.txt", "test content");
         
-        // Создаем CSV базу
         csv_path_ = test_dir_ + "/test_base.csv";
         std::ofstream csv(csv_path_);
-        csv << "d8e8fca2dc0f896fd7cb4cb0031ba249;TestVerdict\n"; // hash of "test content"
+        csv << "d8e8fca2dc0f896fd7cb4cb0031ba249;TestVerdict\n"; 
         csv.close();
     }
 
@@ -37,7 +34,6 @@ protected:
 };
 
 TEST_F(MainTest, DLLLoading) {
-    // Ищем библиотеку в разных возможных местах
     std::vector<std::string> possible_paths = {
         "./libScannerLib.dylib",
         "./scannerlib/libScannerLib.dylib",
@@ -57,7 +53,6 @@ TEST_F(MainTest, DLLLoading) {
     }
     
     if (!dll_handle_) {
-        // Если библиотека не найдена, пропускаем тест с предупреждением
         GTEST_SKIP() << "DLL not found, skipping DLL tests";
         return;
     }
@@ -67,7 +62,6 @@ TEST_F(MainTest, DLLLoading) {
 }
 
 TEST_F(MainTest, ArgumentParsing) {
-    // Тестируем парсинг аргументов (это можно вынести в отдельную функцию)
     const char* argv[] = {"scanner", "--base", "test.csv", "--log", "log.txt", "--path", "/tmp"};
     int argc = 7;
     

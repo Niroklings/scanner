@@ -2,7 +2,6 @@
 #include <string>
 #include <dlfcn.h>
 
-// C-структура для результатов
 struct CScanResult {
     size_t totalFiles;
     size_t maliciousFiles;
@@ -10,7 +9,6 @@ struct CScanResult {
     long long durationMs;
 };
 
-// Объявления C-функций
 typedef void* (*CreateScannerFunc)(const char*, const char*);
 typedef void (*DestroyScannerFunc)(void*);
 typedef CScanResult (*ScanDirectoryFunc)(void*, const char*);
@@ -53,14 +51,12 @@ int main(int argc, char* argv[]) {
     std::string baseFile, logFile, scanPath;
     parseArguments(argc, argv, baseFile, logFile, scanPath);
     
-    // Загружаем динамическую библиотеку
     void* handle = dlopen("./libScannerLib.dylib", RTLD_LAZY);
     if (!handle) {
         std::cerr << "Cannot load library: " << dlerror() << std::endl;
         return 1;
     }
     
-    // Загружаем функции из библиотеки
     CreateScannerFunc createScanner = (CreateScannerFunc)dlsym(handle, "createScanner");
     DestroyScannerFunc destroyScanner = (DestroyScannerFunc)dlsym(handle, "destroyScanner");
     ScanDirectoryFunc scanDirectory = (ScanDirectoryFunc)dlsym(handle, "scanDirectory");
@@ -74,21 +70,13 @@ int main(int argc, char* argv[]) {
     }
     
     try {
-    // Используем функции из DLL
     void* scanner = createScanner(baseFile.c_str(), logFile.c_str());
     if (!scanner) {
         throw std::runtime_error("Failed to create scanner");
     }
     
-    // ЗАГРУЗКА ХЕШЕЙ УЖЕ ВЫПОЛНЯЕТСЯ В КОНСТРУКТОРЕ SCANNER
-    // Не нужно вызывать loadHashes повторно!
-    
-   // std::cout << "Scanning directory: " << scanPath << std::endl;
-    
-    // Выполняем сканирование
     CScanResult result = scanDirectory(scanner, scanPath.c_str());
     
-    // Вывод отчета
     std::cout << "\n=== SCAN REPORT ===\n";
     std::cout << "Total files processed: " << result.totalFiles << "\n";
     std::cout << "Malicious files found: " << result.maliciousFiles << "\n";

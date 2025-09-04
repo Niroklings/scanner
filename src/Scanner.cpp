@@ -16,7 +16,6 @@ Scanner::Scanner(const std::string& basePath, const std::string& logPath)
     }
     
     #ifdef _WIN32
-    // Для Windows: открываем файл с поддержкой Unicode
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
     std::wstring wideLogPath = converter.from_bytes(logPath);
     logFile.open(wideLogPath, std::ios::out | std::ios::trunc);
@@ -28,7 +27,6 @@ Scanner::Scanner(const std::string& basePath, const std::string& logPath)
         throw std::runtime_error("Failed to open log file: " + logPath);
     }
     
-    // Записываем заголовок в лог
     logFile << "Scan Log\n";
     logFile << "========\n\n";
 }
@@ -55,7 +53,6 @@ bool Scanner::loadMaliciousHashes(const std::string& baseFile) {
     
     std::string line;
     while (std::getline(file, line)) {
-        // Убираем CRLF на Windows
         if (!line.empty() && line.back() == '\r') {
             line.pop_back();
         }

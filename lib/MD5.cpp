@@ -102,7 +102,6 @@ std::string MD5::hashFile(const std::string& filename) {
     return md5.finalize();
 }
 
-// Вспомогательные функции для преобразований MD5
 uint32_t MD5::F(uint32_t x, uint32_t y, uint32_t z) { return (x & y) | (~x & z); }
 uint32_t MD5::G(uint32_t x, uint32_t y, uint32_t z) { return (x & z) | (y & ~z); }
 uint32_t MD5::H(uint32_t x, uint32_t y, uint32_t z) { return x ^ y ^ z; }

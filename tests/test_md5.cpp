@@ -42,7 +42,7 @@ TEST_F(MD5Test, HashNonExistentFile) {
 
 TEST_F(MD5Test, HashLargeContent) {
     std::string large_content(1000, 'a');
-    std::string expected_hash = "cabe45dcc9ae5b66ba86600cca6b8ba8"; // Правильный хеш для 1000 'a'
+    std::string expected_hash = "cabe45dcc9ae5b66ba86600cca6b8ba8"; 
     
     EXPECT_EQ(MD5::hash(large_content), expected_hash);
 }

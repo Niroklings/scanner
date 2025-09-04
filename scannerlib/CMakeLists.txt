@@ -1,4 +1,3 @@
-# Динамическая библиотека для macOS (.dylib)
 add_library(ScannerLib SHARED 
     src/ScannerLib.cpp
     ../src/Scanner.cpp
@@ -7,7 +6,6 @@ add_library(ScannerLib SHARED
 
 target_include_directories(ScannerLib PUBLIC ../include)
 
-# Настройки для macOS dylib
 if(APPLE)
     set_target_properties(ScannerLib PROPERTIES
         OUTPUT_NAME "ScannerLib"

@@ -10,36 +10,29 @@ protected:
         test_dir_ = test_utils::getTestResourcePath();
         test_utils::createTestDirectory(test_dir_);
         
-        // Создаем тестовые файлы
         test_utils::createTestFile(test_dir_ + "/safe1.txt", "safe content 1");
         test_utils::createTestFile(test_dir_ + "/safe2.log", "safe content 2");
         
-        // Создаем вредоносный файл с известным содержимым
         malicious_content_ = "known_malicious_content_12345";
         test_utils::createTestFile(test_dir_ + "/malicious.exe", malicious_content_);
         
-        // Создаем поддиректорию
         std::string subdir = test_dir_ + "/subdir";
         test_utils::createTestDirectory(subdir);
         test_utils::createTestFile(subdir + "/safe3.txt", "safe content 3");
         
-        // Создаем CSV базу с правильным хешем
         csv_path_ = test_dir_ + "/test_base.csv";
         std::string real_hash = MD5::hash(malicious_content_);
         std::ofstream csv(csv_path_);
         csv << real_hash << ";TestVerdict\n";
         csv.close();
         
-        // Создаем файл без прав доступа
         std::string restricted_file = test_dir_ + "/no_access.txt";
         test_utils::createTestFile(restricted_file, "secret");
-        // На macOS используем chmod
         std::string command = "chmod 000 " + restricted_file;
         system(command.c_str());
     }
 
     void TearDown() override {
-        // Восстанавливаем права доступа перед удалением
         std::string restricted_file = test_dir_ + "/no_access.txt";
         std::string command = "chmod 644 " + restricted_file;
         system(command.c_str());
@@ -68,8 +61,8 @@ TEST_F(ScannerTest, ScanFindsMaliciousFiles) {
     auto result = scanner.scanDirectory(test_dir_);
     
     EXPECT_GT(result.totalFiles, 0);
-    EXPECT_GT(result.maliciousFiles, 0); // Должен найти наш файл
-    EXPECT_GE(result.errorCount, 0); // Должна быть ошибка доступа
+    EXPECT_GT(result.maliciousFiles, 0); 
+    EXPECT_GE(result.errorCount, 0); 
 }
 
 TEST_F(ScannerTest, ScanEmptyDirectory) {
@@ -91,7 +84,6 @@ TEST_F(ScannerTest, LogFileCreation) {
     std::string log_path = test_dir_ + "/malicious.log";
     Scanner scanner(csv_path_, log_path);
     
-    // Сканируем и проверяем что лог создался
     scanner.scanDirectory(test_dir_);
     
     std::ifstream log_file(log_path);
@@ -108,6 +100,5 @@ TEST_F(ScannerTest, ScannerObjectLifetime) {
         EXPECT_GT(result.totalFiles, 0);
     }
     
-    // Объект должен быть корректно уничтожен
     EXPECT_TRUE(true);
 }

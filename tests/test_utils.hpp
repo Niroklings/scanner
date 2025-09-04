@@ -25,6 +25,6 @@ inline std::string getTestResourcePath() {
     return std::filesystem::temp_directory_path() / "scanner_test";
 }
 
-} // namespace test_utils
+} 
 
-#endif // TEST_UTILS_HPP
+#endif
