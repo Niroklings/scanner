@@ -1,4 +1,4 @@
-#include "Scanner.h"
+#include "../include/Scanner.h"
 #include <sstream>
 #include <iomanip>
 #include <locale>
@@ -7,6 +7,7 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif
+
 
 Scanner::Scanner(const std::string& basePath, const std::string& logPath) 
     : logPath(logPath) {
@@ -161,3 +162,4 @@ void Scanner::logMaliciousFile(const fs::path& filePath, const std::string& hash
     logFile << "----------------------------------------\n";
     logFile.flush();
 }
+
